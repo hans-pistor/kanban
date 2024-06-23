@@ -72,12 +72,7 @@ resource "aws_instance" "my_swarm" {
   ]
   user_data = <<-EOF
   #!/bin/bash
-  sudo dnf update -y \
-  && sudo dnf install -y docker \
-  && sudo systemctl start docker \
-  && sudo systemctl enable docker \
-  && sudo usermod -a -G docker ec2-user \
-  && newgrp docker
+  docker swarm init
   EOF
 }
 
