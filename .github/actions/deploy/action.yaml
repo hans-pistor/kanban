@@ -23,35 +23,35 @@ inputs:
     description: "The SSH key used to run docker commands on the host"
     required: true
 
-  runs:
-    using: "composite"
-    steps:
-      - uses: actions/checkout@v4
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
 
-      - name: Setup SOPS
-        uses: nhedger/setup-sops@v2
-        with:
-          version: 3.7.3
+    - name: Setup SOPS
+      uses: nhedger/setup-sops@v2
+      with:
+        version: 3.7.3
 
-      - name: Setup age
-        uses: alessiodionisi/setup-age-action@v1.3.0
-        with:
-          version: ^1.1.0
+    - name: Setup age
+      uses: alessiodionisi/setup-age-action@v1.3.0
+      with:
+        version: ^1.1.0
 
-      - name: Create age and SSH key files
-        shell: bash
-        run: |-
-          echo "${{ inputs.age_key }}" > ./key.txt
-          echo "${{ inputs.ssh_private_key }}" > ./private_key.pem
+    - name: Create age and SSH key files
+      shell: bash
+      run: |-
+        echo "${{ inputs.age_key }}" > ./key.txt
+        echo "${{ inputs.ssh_private_key }}" > ./private_key.pem
 
-      - name: Deploy
-        shell: bash
-        env:
-          GITHUB_TOKEN: ${{ inputs.gh_pat }}
-          GITHUB_USER: ${{ inputs.github_user }}
-          AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
-          AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
-        run: |-
-          SOPS_AGE_KEY_FILE=$(pwd)/key.txt \
-          PRIVATE_KEY_PATH=$(pwd)/private_key.pem \
-          ./scripts/deploy.sh ${{ inputs.image_tag }}
+    - name: Deploy
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.gh_pat }}
+        GITHUB_USER: ${{ inputs.github_user }}
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws_access_key_id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws_secret_access_key }}
+      run: |-
+        SOPS_AGE_KEY_FILE=$(pwd)/key.txt \
+        PRIVATE_KEY_PATH=$(pwd)/private_key.pem \
+        ./scripts/deploy.sh ${{ inputs.image_tag }}
