@@ -19,5 +19,22 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
 
+  web:
+    image: ${WEB_IMAGE:-ghcr.io/hans-pistor/kanban:latest}
+    depends_on:
+      - db
+    command: >
+      bash -c "bin/migrate && bin/server"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    environment:
+      - DATABASE_URL=ecto://postgres:postgres@db/postgres
+      - SECRET_KEY_BASE=g6n8LAwfDx+x11d0mBdVAFAgGvUWap+73Vb5EW9D0RhNa1t/XoKxhaoac0KFDTLR
+      - PHX_HOST="localhost"
+
 volumes:
   db_data:
