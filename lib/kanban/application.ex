@@ -8,6 +8,8 @@ defmodule Kanban.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      # Start the DNS cluster
+      {DNSCluster, query: "tasks.web"},
       # Start the Telemetry supervisor
       KanbanWeb.Telemetry,
       # Start the Ecto repository
