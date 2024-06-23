@@ -14,6 +14,11 @@ terraform {
       source  = "hashicorp/local"
       version = "2.4.0"
     }
+
+    null = {
+      source  = "hashicorp/null"
+      version = "3.2.1"
+    }
   }
 }
 
@@ -163,4 +168,33 @@ resource "aws_ssm_parameter" "swarm_token" {
   lifecycle {
     ignore_changes = [value]
   }
+}
+
+resource "null_resource" "wait_for_swarm_ready_tag" {
+  depends_on = [aws_instance.my_swarm]
+  provisioner "local-exec" {
+    environment = {
+      AWS_REGION           = var.region
+      INSTANCE_MANAGER_TAG = local.manager_tag
+    }
+    command = "bash ../../scripts/wait_for_swarm_ready_tag.sh"
+  }
+}
+
+resource "null_resource" "swarm_provisioner" {
+  depends_on = [null_resource.wait_for_swarm_ready_tag]
+  provisioner "local-exec" {
+    environment = {
+      GITHUB_USER           = var.gh_owner
+      GITHUB_TOKEN          = var.gh_pat
+      AWS_SECRET_ACCESS_KEY = var.aws_secret_access_key
+      AWS_ACCESS_KEY_ID     = var.aws_access_key_id
+      PRIVATE_KEY_PATH      = var.private_key_path
+      SOPS_AGE_KEY_FILE     = var.age_key_path
+      COMPOSE_FILE_PATH     = var.compose_file
+      WEB_REPLICAS          = length(aws_instance.my_swarm)
+    }
+    command = "bash ../../scripts/deploy.sh ${var.image_to_deploy}"
+  }
+
 }
