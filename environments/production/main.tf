@@ -1,6 +1,8 @@
 module "swarm" {
   source           = "../../modules/cloud/aws/compute/swarm"
   private_key_path = "${path.module}/private_key.pem"
+  region           = "us-west-2"
+  account_id       = "647664114478"
 }
 
 module "repository_secrets" {
@@ -25,6 +27,6 @@ module "contributing_workflow" {
   ]
 }
 
-output "swarm_ssh_command" {
-  value = module.swarm.ssh_command
+output "ssh_commands" {
+  value = module.swarm.ssh_commands
 }

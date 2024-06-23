@@ -1,8 +1,9 @@
 
-output "ssh_command" {
-  value       = <<-EOF
-  ssh -i ${var.private_key_path} ec2-user@${aws_instance.my_swarm.public_ip}
-  EOF
+output "ssh_commands" {
+  value = {
+    for idx, instance in aws_instance.my_swarm :
+    format("node_%d", idx + 1) => format("ssh -i %s ec2-user@%s", var.private_key_path, instance.public_ip)
+  }
   description = "The SSH command to connect to the instances"
 }
 
