@@ -16,6 +16,15 @@ module "repository_secrets" {
   github_owner = "hans-pistor"
 }
 
+module "contributing_workflow" {
+  source       = "../../modules/integrations/github/contributing_workflow"
+  repository   = "kanban"
+  github_owner = "hans-pistor"
+  status_checks = [
+    "Check, Compile, Test"
+  ]
+}
+
 output "swarm_ssh_command" {
   value = module.swarm.ssh_command
 }
