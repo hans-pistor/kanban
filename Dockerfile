@@ -7,6 +7,8 @@ ARG RUNNER_IMG="debian:${DEBIAN_VERSION}"
 
 FROM ${BUILDER_IMAGE} as builder
 
+ENV ERL_FLAGS="+JPperf true"
+
 WORKDIR /app
 
 # Install hex + rebar

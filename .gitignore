@@ -55,3 +55,6 @@ erl_crash.dump
 phoenix-*.ez
 
 .DS_Store
+
+/priv/plts/*.plt
+/priv/plts/*.plt.hash
