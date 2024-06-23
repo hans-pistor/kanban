@@ -49,8 +49,6 @@ services:
       - DATABASE_URL_FILE=/run/secrets/databaseurl
       - SECRET_KEY_BASE_FILE=/run/secrets/secretkeybase
       - PHX_HOST="localhost"
-    ports:
-      - 4000:4000
 
 volumes:
   db_data:
