@@ -16,7 +16,7 @@ resource "github_branch_protection" "main" {
 
   pattern        = "main"
   lock_branch    = true
-  enforce_admins = true
+  enforce_admins = false
 
   required_status_checks {
     strict   = true

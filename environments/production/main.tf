@@ -1,6 +1,14 @@
 module "swarm" {
-  source           = "../../modules/cloud/aws/compute/swarm"
-  private_key_path = "${path.module}/private_key.pem"
+  source                = "../../modules/cloud/aws/compute/swarm"
+  private_key_path      = "${path.module}/private_key.pem"
+  region                = "us-west-2"
+  account_id            = "647664114478"
+  age_key_path          = "${path.module}/key.txt"
+  compose_file          = "../../docker-compose.yaml"
+  aws_access_key_id     = var.aws_access_key_id
+  aws_secret_access_key = var.aws_secret_access_key
+  gh_pat                = var.gh_pat
+  gh_owner              = "hans-pistor"
 }
 
 module "repository_secrets" {
@@ -25,6 +33,6 @@ module "contributing_workflow" {
   ]
 }
 
-output "swarm_ssh_command" {
-  value = module.swarm.ssh_command
+output "ssh_commands" {
+  value = module.swarm.ssh_commands
 }
